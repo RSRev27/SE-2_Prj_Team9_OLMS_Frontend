@@ -1,0 +1,76 @@
+/* App.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 60px;
+    background-color: #00548b;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+  }
+  
+  .sidebar .icon {
+    font-size: 24px;
+    margin: 15px 0;
+    cursor: pointer;
+  }
+  
+  .main-content {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .dashboard {
+    flex: 3;
+    margin-right: 20px;
+  }
+  
+  .dashboard h2 {
+    margin-bottom: 10px;
+  }
+  
+  .course-list {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .course-card {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+    
+  }
+  
+  .course-card img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .todo-list {
+    flex: 1;
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .todo-list h2 {
+    margin-bottom: 10px;
+  }
+  
+  .todo-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  

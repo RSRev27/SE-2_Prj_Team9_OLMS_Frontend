@@ -1,0 +1,114 @@
+/* SideNav.css */
+.sidenav {
+    width: 70px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #0066cc;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.sidenav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.sidenav li {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.sidenav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 10px;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.sidenav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidenav i {
+    font-size: 24px;
+    margin-bottom: 6px;
+    color: white;
+}
+
+.sidenav ul li:first-child a {
+    background-color: #005ab3;
+    padding: 15px 0;
+}
+
+.sidenav ul li:first-child i {
+    font-size: 29px;
+}
+
+.sidenav li:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Custom icons */
+.icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 6px;
+}
+
+.circle-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.question-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+}
+
+.question-icon::before {
+    content: "?";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #0066cc;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.book-icon {
+    width: 30px;
+    height: 40px;
+    background-color: white;
+    position: relative;
+    border-radius: 3px 10px 10px 3px;
+}
+
+.book-icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 7px;
+    height: 100%;
+    background-color: rgba(0, 102, 204, 0.3);
+    border-right: 2px solid rgba(0, 102, 204, 0.5);
+}

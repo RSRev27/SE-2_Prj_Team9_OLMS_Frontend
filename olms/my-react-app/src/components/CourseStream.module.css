@@ -1,0 +1,23 @@
+/* CourseStream.module.css */
+.courseStream {
+    padding: 20px;
+  }
+  
+  .activityItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .activityItem h3 {
+    font-weight: 600;
+  }
+  
+  .showMore {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
