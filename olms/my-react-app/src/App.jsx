@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import HomePage from './components/Homepage';
 import CoursePage from './components/CoursePage'
 import CourseStream from './components/CourseStream'
+
 function App() {
   const [count, setCount] = useState(0);
   const isAuthenticated = false;

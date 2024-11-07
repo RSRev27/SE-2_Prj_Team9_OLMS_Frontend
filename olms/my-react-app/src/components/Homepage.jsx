@@ -2,10 +2,11 @@ import React from 'react';
 import Sidebar from './SideNav';
 import Dashboard from './Dashboard';
 import ToDoList from './ToDoList';
-import './HomePage.css'
+import './Homepage.css'
 import ai from './Ai.jpg'
 import s from './se.jpg'
 import ScrollProgress from './ScrollProg';
+
 const HomePage = () => {
   const courses = [
     { id:'ai',image: ai, title: 'Artificial Intelligence', description: 'Works on different parts of AI' },

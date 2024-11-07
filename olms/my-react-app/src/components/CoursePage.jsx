@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams,Link } from 'react-router-dom';
-import courseData from './courseData';
+import courseData from './CourseData';
 import styles from './CoursePage.module.css';
 
 const CoursePage = () => {
