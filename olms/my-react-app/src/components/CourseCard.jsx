@@ -8,6 +8,7 @@ const CourseCard = ({ course }) => {
       <div className="course-card-content">
         <img src={course.image} alt={course.title} className="course-image" />
         <h3>{course.title}</h3>
+        <h4>{course.rating} ★</h4> {/* Display the rating here */}
       </div>
     </Link>
   );

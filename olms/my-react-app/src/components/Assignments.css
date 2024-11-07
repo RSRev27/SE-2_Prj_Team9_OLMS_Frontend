@@ -1,0 +1,152 @@
+/* Assignments.css */
+
+/* Container for the assignments section */
+.assignments-container {
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .assignments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    padding: 8px 12px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .add-assignment,
+  .mark-all-read {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .add-assignment:hover,
+  .mark-all-read:hover {
+    background-color: #0056b3;
+  }
+  
+  .add-assignment {
+    background-color: #28a745;
+  }
+  
+  .add-assignment:hover {
+    background-color: #218838;
+  }
+  
+  /* Textarea and file input container */
+  .assignment-textarea-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .assignment-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .assignment-file-input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .submit-assignment {
+    padding: 10px 15px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  
+  .submit-assignment:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Assignments list styles */
+  .assignments-list {
+    margin-top: 30px;
+  }
+  
+  .assignment-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .assignment-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .assignment-sections {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .assignment-description {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .assignment-date {
+    font-size: 14px;
+    color: #888;
+  }
+  
+  .assignment-file-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .assignment-file-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Avatar styles for profile images */
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .initials-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  

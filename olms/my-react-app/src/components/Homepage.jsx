@@ -1,16 +1,17 @@
+// HomePage.jsx
 import React from 'react';
 import Sidebar from './SideNav';
 import Dashboard from './Dashboard';
 import ToDoList from './ToDoList';
-import './Homepage.css'
-import ai from './Ai.jpg'
-import s from './se.jpg'
+import './HomePage.css';
+import ai from './Ai.jpg';
+import s from './se.jpg';
 import ScrollProgress from './ScrollProg';
 
 const HomePage = () => {
   const courses = [
-    { id:'ai',image: ai, title: 'Artificial Intelligence', description: 'Works on different parts of AI' },
-    { id:'se2',image: s, title: 'Software Engineering', description: 'Different processes SDLC models' },
+    { id: 'ai', image: ai, title: 'Artificial Intelligence', description: 'Works on different parts of AI', rating: 4.5 },
+    { id: 'se2', image: s, title: 'Software Engineering', description: 'Different processes SDLC models', rating: 4.8 },
   ];
 
   const toDoItems = [
@@ -24,10 +25,11 @@ const HomePage = () => {
       <div className="main-content">
         <Dashboard courses={courses} />
         <ToDoList items={toDoItems} />
-        <ScrollProgress/>
+        <ScrollProgress />
       </div>
     </div>
   );
 };
 
 export default HomePage;
+
