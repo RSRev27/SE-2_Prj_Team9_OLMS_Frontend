@@ -1,10 +1,12 @@
 // src/components/LoginPage.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import './LoginPage.css'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,8 +22,9 @@ const LoginPage = () => {
   })
       .then(response => response.json())
       .then(data => {
-        if (data.status === 'Valid Authentication') {
-          navigate('/Homepage');
+        console.log(data);
+        if (data.authentication === 'Valid Authentication') {
+          navigate('/help');
         } else {
           
           alert('Invalid login. Please try again!');

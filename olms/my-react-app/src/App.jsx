@@ -9,7 +9,7 @@ import CourseStream from './components/CourseStream'
 
 function App() {
   const [count, setCount] = useState(0);
-  const isAuthenticated = false;
+  const isAuthenticated = true;
   const location = window.location.pathname;
   const isLoginPage = location === '/login';
 
