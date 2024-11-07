@@ -20,10 +20,18 @@ const LoginPage = () => {
   })
       .then(response => response.json())
       .then(data => {
-          console.log('Success:', data);
+        if (data.status === 'Valid Authentication') {
+          navigate('/Homepage');
+        } else {
+          
+          alert('Invalid login. Please try again!');
+        }
       })
-      .catch(error => console.error('Error:', error));
-  };
+      .catch(error => {
+        console.error('Error:', error);
+        alert('There was an error with the login request.');
+      });
+    }
 
   return (
     <div className="login-container">
