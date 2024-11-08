@@ -29,6 +29,12 @@ const SideNav = () => {
           )}
         </li>
         <li>
+          <Link to="/home" aria-label="Home">
+            <div className="icon circle-icon"></div>
+            <span>Home</span>
+          </Link>
+        </li>
+        <li>
           <Link to="/help" aria-label="Help">
             <div className="icon question-icon"></div>
             <span>Help</span>
