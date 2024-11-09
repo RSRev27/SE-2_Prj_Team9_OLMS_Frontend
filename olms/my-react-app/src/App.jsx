@@ -11,6 +11,7 @@ import Announcements from './components/Announcements';
 import Assignments from './components/Assignments';
 import Help from './components/Help';
 import AccessDenied from './components/AccessDenied';
+import Grades from './components/Grades';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,11 +35,13 @@ function App() {
             {/* Protected Routes */}
             <Route path="/help" element={isAuthenticated ? <Help /> : <AccessDenied />} />
             <Route path="/home" element={isAuthenticated?<HomePage/>:<AccessDenied/>}/>
+            <Route path="/courses" element={isAuthenticated?<HomePage/>:<AccessDenied/>}/>
             <Route path="/courses/:courseId" element={isAuthenticated ? <CoursePage /> : <AccessDenied />} />
             <Route path="/courses/:courseId/stream" element={isAuthenticated ? <CourseStream /> : <AccessDenied />} />
             <Route path="/courses/:courseId/modules" element={isAuthenticated ? <Lectures /> : <AccessDenied />} />
             <Route path="/courses/:courseId/announcements" element={isAuthenticated ? <Announcements /> : <AccessDenied />} />
             <Route path="/courses/:courseId/assignments" element={isAuthenticated ? <Assignments /> : <AccessDenied />} />
+            <Route path="/courses/:courseId/grades" element={isAuthenticated ? <Grades/> : <AccessDenied />} />
 
             {/* Fallback Route */}
             <Route path="*" element={<Navigate to="/" />} />
