@@ -18,8 +18,8 @@ function App() {
   const isLoginPage = location === '/login';
 
   // Function to set authentication state
-  const handleLogin = () => {
-    setIsAuthenticated(false);
+  const handleLogin = (authStatus) => {
+    setIsAuthenticated(authStatus);
   };
 
   return (

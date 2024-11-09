@@ -18,8 +18,9 @@ const LoginPage = ({ onLogin }) => {
     })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         if (data.authentication === 'Valid Authentication') {
-          onLogin();  // Update authentication state in App
+          onLogin(true);  // Update authentication state in App
           navigate('/help');  // Redirect to Help page
         } else {
           alert('Invalid login. Please try again!');
