@@ -1,140 +1,276 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PlusCircle } from 'lucide-react';
 
 const Grades = () => {
-  const { courseId } = useParams();
   const [grades, setGrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [stats, setStats] = useState({
-    average: 0,
-    highest: 0,
-    lowest: 100
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newGrade, setNewGrade] = useState({
+    courseId: '',
+    studentName: '',
+    quizId: '',
+    quizResults: '',
+    assignmentId: '',
+    assignmentResults: '',
+    description: ''
   });
 
   useEffect(() => {
     fetchGrades();
-  }, [courseId]);
+  }, []);
 
   const fetchGrades = async () => {
     try {
       setLoading(true);
-      // Replace this URL with your actual API endpoint
-      const response = await fetch(`/api/courses/${courseId}/grades`);
+      const response = await fetch('http://localhost:8080/api/grades');
       if (!response.ok) {
         throw new Error('Failed to fetch grades');
       }
       const data = await response.json();
       setGrades(data);
-      calculateStats(data);
     } catch (err) {
-      setError(err.message);
+      setError('Error fetching grades: ' + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateStats = (gradeData) => {
-    if (gradeData.length === 0) return;
-
-    const scores = gradeData.map(g => g.score);
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    const max = Math.max(...scores);
-    const min = Math.min(...scores);
-
-    setStats({
-      average: avg.toFixed(2),
-      highest: max,
-      lowest: min
-    });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewGrade(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const getGradeColor = (score) => {
-    if (score >= 90) return 'text-green-600';
-    if (score >= 80) return 'text-blue-600';
-    if (score >= 70) return 'text-yellow-600';
-    return 'text-red-600';
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8080/api/grades', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newGrade),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add grade');
+      }
+
+      const addedGrade = await response.json();
+      setGrades(prev => [...prev, addedGrade]);
+      setShowAddForm(false);
+      setNewGrade({
+        courseId: '',
+        studentName: '',
+        quizId: '',
+        quizResults: '',
+        assignmentId: '',
+        assignmentResults: '',
+        description: ''
+      });
+    } catch (err) {
+      setError('Error adding grade: ' + err.message);
+    }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading grades...</div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <Alert variant="destructive" className="mx-4 my-2">
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
+      <div className="p-4 bg-red-50 text-red-600 rounded-lg text-center">
+        {error}
+      </div>
     );
   }
 
   return (
-    <div className="p-4 space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Course Statistics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-500">Class Average</div>
-              <div className="text-2xl font-bold">{stats.average}%</div>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-500">Highest Grade</div>
-              <div className="text-2xl font-bold text-green-600">{stats.highest}%</div>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-500">Lowest Grade</div>
-              <div className="text-2xl font-bold text-red-600">{stats.lowest}%</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Course Grades</h2>
+        <button
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <PlusCircle className="w-5 h-5" />
+          Add Grade
+        </button>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Assignment Grades</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Assignment</TableHead>
-                <TableHead>Due Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Score</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {grades.map((grade, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{grade.title}</TableCell>
-                  <TableCell>{new Date(grade.dueDate).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                      ${grade.status === 'Graded' ? 'bg-green-100 text-green-800' : 
-                        grade.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        'bg-red-100 text-red-800'}`}>
-                      {grade.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className={`text-right font-bold ${getGradeColor(grade.score)}`}>
-                    {grade.status === 'Graded' ? `${grade.score}%` : '-'}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      {showAddForm && (
+        <div className="mb-6 bg-white rounded-lg shadow-md p-6">
+          <h3 className="text-lg font-semibold mb-4">Add New Grade</h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Course ID
+                </label>
+                <input
+                  type="text"
+                  name="courseId"
+                  value={newGrade.courseId}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Student Name
+                </label>
+                <input
+                  type="text"
+                  name="studentName"
+                  value={newGrade.studentName}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Quiz ID
+                </label>
+                <input
+                  type="text"
+                  name="quizId"
+                  value={newGrade.quizId}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Quiz Results (%)
+                </label>
+                <input
+                  type="number"
+                  name="quizResults"
+                  value={newGrade.quizResults}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
+                  min="0"
+                  max="100"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Assignment ID
+                </label>
+                <input
+                  type="text"
+                  name="assignmentId"
+                  value={newGrade.assignmentId}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Assignment Results (%)
+                </label>
+                <input
+                  type="number"
+                  name="assignmentResults"
+                  value={newGrade.assignmentResults}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
+                  min="0"
+                  max="100"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={newGrade.description}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded-md"
+                rows="3"
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Save Grade
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        {grades.length === 0 ? (
+          <div className="p-4 bg-gray-50 text-gray-600 rounded-lg text-center">
+            No grades found.
+          </div>
+        ) : (
+          grades.map((grade) => (
+            <div
+              key={grade._id}
+              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200"
+            >
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-semibold text-lg text-gray-700">
+                  Course {grade.courseId}
+                </span>
+                <span className="text-sm text-gray-500">
+                  Student: {grade.studentName}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-3">
+                <div className="bg-gray-50 p-3 rounded">
+                  <div className="text-sm text-gray-600 mb-1">Quiz {grade.quizId}</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    {grade.quizResults}%
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-3 rounded">
+                  <div className="text-sm text-gray-600 mb-1">Assignment {grade.assignmentId}</div>
+                  <div className="text-lg font-bold text-green-600">
+                    {grade.assignmentResults}%
+                  </div>
+                </div>
+              </div>
+
+              {grade.description && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <p className="font-medium">Description:</p>
+                  <p>{grade.description}</p>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
