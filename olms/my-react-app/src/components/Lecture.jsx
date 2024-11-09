@@ -1,8 +1,9 @@
-// Frontend: lectures.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-const CourseSection = ({ title, lectures, onFileUpload, onFileDelete }) => {
+const API_URL = import.meta.env.VITE_API_URL;
+
+const CourseSection = ({ title, lectures, onFileUpload, onFileDelete, courseId }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -137,7 +138,9 @@ const Lectures = () => {
 
   const fetchLectures = async () => {
     try {
-      const response = await fetch(`/api/courses/${courseId}/lectures`);
+      const response = await fetch(`${API_URL}/olms/courses/${courseId}/lectures`, {
+        method: 'GET',
+      });
       const data = await response.json();
       setLectures(data);
     } catch (error) {
@@ -149,7 +152,7 @@ const Lectures = () => {
 
   const handleFileUpload = async (formData) => {
     try {
-      const response = await fetch(`/api/courses/${courseId}/lectures/upload`, {
+      const response = await fetch(`${API_URL}/olms/courses/${courseId}/lectures/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -164,7 +167,7 @@ const Lectures = () => {
     if (!window.confirm('Are you sure you want to delete this file?')) return;
 
     try {
-      const response = await fetch(`/api/courses/${courseId}/lectures/${lectureId}`, {
+      const response = await fetch(`${API_URL}/olms/courses/${courseId}/lectures/${lectureId}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Delete failed');
@@ -189,6 +192,7 @@ const Lectures = () => {
         lectures={lectures.items || []}
         onFileUpload={handleFileUpload}
         onFileDelete={handleFileDelete}
+        courseId={courseId} 
       />
     </div>
   );

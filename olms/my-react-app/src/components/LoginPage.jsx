@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -9,7 +11,7 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('https://glorious-engine-v7p9w6gpjr6cxp99-8080.app.github.dev/olms/login/verification', {
+    fetch(API_URL+'/olms/login/verification', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
