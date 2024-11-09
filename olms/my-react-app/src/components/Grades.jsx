@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Grades = () => {
   const [grades, setGrades] = useState([]);
@@ -12,17 +14,29 @@ const Grades = () => {
     quizResults: '',
     assignmentId: '',
     assignmentResults: '',
-    description: ''
+    description: '',
+    userType: ''  // Assuming userType is needed for both get and set
   });
 
   useEffect(() => {
     fetchGrades();
   }, []);
 
+  // Fetch grades: Only courseId, userType, and studentName are required
   const fetchGrades = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/grades');
+      const response = await fetch(API_URL+'/olms/grades/getgrades', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseId: newGrade.courseId,
+          studentName: newGrade.studentName,
+          userType: newGrade.userType // Assuming userType is part of the request body for getgrades
+        }),
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch grades');
       }
@@ -35,6 +49,7 @@ const Grades = () => {
     }
   };
 
+  // Handle input change: Updating newGrade state
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewGrade(prev => ({
@@ -43,15 +58,16 @@ const Grades = () => {
     }));
   };
 
+  // Handle form submission for adding grades
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/grades', {
+      const response = await fetch(API_URL+'/olms/grades/savegrades', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newGrade),
+        body: JSON.stringify(newGrade),  // Send all fields (including quiz and assignment details)
       });
 
       if (!response.ok) {
@@ -68,7 +84,8 @@ const Grades = () => {
         quizResults: '',
         assignmentId: '',
         assignmentResults: '',
-        description: ''
+        description: '',
+        userType: ''  // Reset userType as well
       });
     } catch (err) {
       setError('Error adding grade: ' + err.message);
@@ -188,6 +205,19 @@ const Grades = () => {
                   required
                   min="0"
                   max="100"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  User Type
+                </label>
+                <input
+                  type="text"
+                  name="userType"
+                  value={newGrade.userType}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded-md"
+                  required
                 />
               </div>
             </div>
