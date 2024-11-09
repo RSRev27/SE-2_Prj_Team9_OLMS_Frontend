@@ -1,16 +1,25 @@
-// SideNav.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './SideNav.css';
 
-const SideNav = () => {
+const SideNav = ({ onLogout }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
-  // Check if user is logged in (example approach, replace with actual login logic)
+  // Check if user is logged in
   useEffect(() => {
     const loggedIn = localStorage.getItem('isAuthenticated') === 'true';
     setIsAuthenticated(loggedIn);
   }, []);
+
+  const handleLogout = () => {
+    // Clear authentication data
+    localStorage.removeItem('isAuthenticated');
+    setIsAuthenticated(false);
+    onLogout(false);
+    navigate('/login');
+  };
 
   return (
     <nav className="sidenav">
@@ -46,7 +55,18 @@ const SideNav = () => {
             <span>Courses</span>
           </Link>
         </li>
-        {/* Add more links as needed */}
+        {isAuthenticated && (
+          <li>
+            <button
+              onClick={handleLogout}
+              className="flex items-center px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors w-full"
+              aria-label="Logout"
+            >
+              <div className="icon logout-icon"></div>
+              <span>Logout</span>
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   );

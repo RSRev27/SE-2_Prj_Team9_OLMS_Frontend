@@ -22,11 +22,15 @@ function App() {
   const handleLogin = (authStatus) => {
     setIsAuthenticated(authStatus);
   };
+  // In App.jsx
+const handleLogout = (authStatus) => {
+  setIsAuthenticated(authStatus);
+};
 
   return (
     <Router>
       <div className="app-container">
-        {!isLoginPage && <SideNav />}
+        {!isLoginPage && <SideNav onLogout={handleLogout} />}
         <div className={!isLoginPage ? "main-content" : "login-content"}>
           <Routes>
             <Route path="/" element={<AccessDenied/>} />
