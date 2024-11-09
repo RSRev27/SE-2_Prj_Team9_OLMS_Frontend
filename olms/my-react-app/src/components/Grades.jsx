@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle } from 'lucide-react';
 
 const Grades = () => {
   const [grades, setGrades] = useState([]);
@@ -98,10 +97,9 @@ const Grades = () => {
         <h2 className="text-2xl font-bold text-gray-800">Course Grades</h2>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
-          <PlusCircle className="w-5 h-5" />
-          Add Grade
+          + Add Grade
         </button>
       </div>
 
