@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Grades = () => {
+  const userType = localStorage.getItem('userType');
+  const { courseId } = useParams(); // Get courseId from URL parameters
   const [grades, setGrades] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newGrade, setNewGrade] = useState({
@@ -14,32 +17,37 @@ const Grades = () => {
     quizResults: '',
     assignmentId: '',
     assignmentResults: '',
-    description: '',
-    userType: ''  // Assuming userType is needed for both get and set
+    userType: '',
   });
 
-  useEffect(() => {
-    fetchGrades();
-  }, []);
-
-  // Fetch grades: Only courseId, userType, and studentName are required
+  // Fetch grades function
   const fetchGrades = async () => {
+    if (!courseId) {
+      setError('Course ID is required.');
+      return;
+    }
+
     try {
       setLoading(true);
-      const response = await fetch(API_URL+'/olms/grades/getgrades', {
+      setError(null);
+      const response = await fetch(API_URL + '/olms/grades/getgrades', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          courseId: newGrade.courseId,
-          studentName: newGrade.studentName,
-          userType: newGrade.userType // Assuming userType is part of the request body for getgrades
+          courseId: courseId,
+          //studentName: "",
+          //userType: "",
+          // We're not filtering by studentName and userType initially
+          // but you can add them back if needed
         }),
       });
+
       if (!response.ok) {
         throw new Error('Failed to fetch grades');
       }
+
       const data = await response.json();
       setGrades(data);
     } catch (err) {
@@ -49,25 +57,44 @@ const Grades = () => {
     }
   };
 
-  // Handle input change: Updating newGrade state
+  // Initial fetch when component mounts or courseId changes
+  useEffect(() => {
+    fetchGrades();
+  }, [courseId]); // Dependency on courseId
+
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewGrade(prev => ({
+    setNewGrade((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
+      courseId: courseId, // Always use the courseId from URL
     }));
   };
 
   // Handle form submission for adding grades
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const requiredFields = ['studentName', 'quizId', 'quizResults', 'assignmentId', 'assignmentResults', 'userType'];
+    for (let field of requiredFields) {
+      if (!newGrade[field]) {
+        setError(`Please fill in the ${field} field.`);
+        return;
+      }
+    }
+
     try {
-      const response = await fetch(API_URL+'/olms/grades/savegrades', {
+      setError(null);
+      const response = await fetch(API_URL + '/olms/grades/savegrades', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newGrade),  // Send all fields (including quiz and assignment details)
+        body: JSON.stringify({
+          ...newGrade,
+          courseId: courseId, // Ensure we're using the courseId from URL
+        }),
       });
 
       if (!response.ok) {
@@ -75,7 +102,7 @@ const Grades = () => {
       }
 
       const addedGrade = await response.json();
-      setGrades(prev => [...prev, addedGrade]);
+      setGrades((prev) => [...prev, addedGrade]);
       setShowAddForm(false);
       setNewGrade({
         courseId: '',
@@ -84,8 +111,7 @@ const Grades = () => {
         quizResults: '',
         assignmentId: '',
         assignmentResults: '',
-        description: '',
-        userType: ''  // Reset userType as well
+        userType: '',
       });
     } catch (err) {
       setError('Error adding grade: ' + err.message);
@@ -94,24 +120,17 @@ const Grades = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 bg-red-50 text-red-600 rounded-lg text-center">
-        {error}
+      <div className="max-w-2xl mx-auto p-4 text-center">
+        <div className="text-gray-600">Loading grades...</div>
       </div>
     );
   }
 
   return (
     <div className="max-w-2xl mx-auto p-4">
+    {userType !== "Student" && (
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Course Grades</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Course {courseId} Grades</h2>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -119,6 +138,14 @@ const Grades = () => {
           + Add Grade
         </button>
       </div>
+    )}
+    
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
 
       {showAddForm && (
         <div className="mb-6 bg-white rounded-lg shadow-md p-6">
@@ -127,12 +154,12 @@ const Grades = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Course ID
+                  User Type
                 </label>
                 <input
                   type="text"
-                  name="courseId"
-                  value={newGrade.courseId}
+                  name="userType"
+                  value={newGrade.userType}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md"
                   required
@@ -207,32 +234,6 @@ const Grades = () => {
                   max="100"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  User Type
-                </label>
-                <input
-                  type="text"
-                  name="userType"
-                  value={newGrade.userType}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
-                name="description"
-                value={newGrade.description}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded-md"
-                rows="3"
-                required
-              />
             </div>
             <div className="flex justify-end gap-2">
               <button
@@ -288,13 +289,6 @@ const Grades = () => {
                   </div>
                 </div>
               </div>
-
-              {grade.description && (
-                <div className="mt-2 text-sm text-gray-600">
-                  <p className="font-medium">Description:</p>
-                  <p>{grade.description}</p>
-                </div>
-              )}
             </div>
           ))
         )}
@@ -304,3 +298,4 @@ const Grades = () => {
 };
 
 export default Grades;
+

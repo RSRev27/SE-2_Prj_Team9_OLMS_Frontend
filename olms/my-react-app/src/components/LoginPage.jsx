@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const[userType,setUserType]=useState('')
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -16,14 +17,16 @@ const LoginPage = ({ onLogin }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userID: email, password: password }),
+      body: JSON.stringify({ userID: email, password: password , userType: userType }),
     })
       .then(response => response.json())
       .then(data => {
         console.log(data);
         if (data.authentication === 'Valid Authentication') {
+          localStorage.setItem('userType', userType);
           onLogin(true);  // Update authentication state in App
-          navigate('/help');  // Redirect to Help page
+          navigate('/home');  // Redirect to Help page
+        
         } else {
           alert('Invalid login. Please try again!');
         }
