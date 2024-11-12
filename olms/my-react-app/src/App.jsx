@@ -12,6 +12,7 @@ import Assignments from './components/Assignments';
 import Help from './components/Help';
 import AccessDenied from './components/AccessDenied';
 import Grades from './components/Grades';
+import RegisterPage from './components/RegisterPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,6 +21,10 @@ function App() {
 
   // Function to set authentication state
   const handleLogin = (authStatus) => {
+    setIsAuthenticated(authStatus);
+  };
+
+  const handleRegister = (authStatus) => {
     setIsAuthenticated(authStatus);
   };
   // In App.jsx
@@ -35,10 +40,13 @@ const handleLogout = (authStatus) => {
           <Routes>
             <Route path="/" element={<AccessDenied/>} />
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+            <Route path="/register" element={<RegisterPage onRegister={handleRegister} />} />
 
             {/* Protected Routes */}
             <Route path="/help" element={isAuthenticated ? <Help /> : <AccessDenied />} />
+            
             <Route path="/home" element={isAuthenticated?<HomePage/>:<AccessDenied/>}/>
+
             <Route path="/courses" element={isAuthenticated?<HomePage/>:<AccessDenied/>}/>
             <Route path="/courses/:courseId" element={isAuthenticated ? <CoursePage /> : <AccessDenied />} />
             <Route path="/courses/:courseId/stream" element={isAuthenticated ? <CourseStream /> : <AccessDenied />} />

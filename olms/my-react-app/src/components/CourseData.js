@@ -34,6 +34,23 @@ const courseData = {
       modeOfTeaching: 'On Campus',
       instructions: 'All course instruction will be in person. Online attendance is available for those who need it.',
     },
+    123: {
+      title: 'computer networks',
+      term: '2024 Fall',
+      lectures: 'TBD',
+      officeHours: {
+        instructor: 'Lightyagami',
+        email: 'Lightyagami@ligtn.edu',
+        hours: 'Monday and Wednesday 2:00 - 3:20pm, at ERB 101',
+        gta: {
+          name: 'Logan',
+          email: 'Logan@ligtn.edu',
+          hours: 'Tuesday and Thursday 1:00pm - 2:30pm at ERB 102',
+        },
+      },
+      modeOfTeaching: 'On Campus',
+      instructions: 'contact admin for edition of this course',
+    },
   };
   
   export default courseData;

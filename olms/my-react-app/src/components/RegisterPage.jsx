@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css';
+//import './RegisterPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const LoginPage = ({ onLogin }) => {
+const RegisterPage = ({ onRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const[userType, setUserType]=useState('')
+  const [name,setName]=useState('');
+  const [role, setRole] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(API_URL+'/olms/login/verification', {
+    fetch(API_URL+'/olms/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userID: email, password: password , userType: userType }),
+      body: JSON.stringify({ userID: email, password: password , fullName: name , role: role }),
     })
       .then(response => response.json())
       .then(data => {
@@ -26,23 +27,23 @@ const LoginPage = ({ onLogin }) => {
         if (data.userId) {
           // If JWT token is returned, authenticate the user
           localStorage.setItem('userId', data.userId);  // Store the token
-          onLogin(true);  // Update the login state in the parent component
+          onRegister(true);  // Update the login state in the parent component
           navigate('/home');
         
         } else {
-          alert('Invalid login. Please try again!');
+          alert('Invalid Register. Please try again!');
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('There was an error with the login request.');
+        alert('There was an error with the Register request.');
       });
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Login</h2>
+        <h2>Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
@@ -51,6 +52,16 @@ const LoginPage = ({ onLogin }) => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
@@ -64,15 +75,29 @@ const LoginPage = ({ onLogin }) => {
               required
             />
           </div>
-          <button type="submit" className="login-button">Login</button>
+          <div className="input-group">
+            <label htmlFor="role">Role</label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            >
+              <option value="" disabled>Select your role</option>
+              <option value="TA">TA</option>
+              <option value="Professor">Professor</option>
+              <option value="Student">Student</option>
+            </select>
+          </div>
+          <button type="submit" className="login-button">Register</button>
         </form>
         <p>
-          Don't have an account? <a href="/register">Register</a>
+          Don't have an account? <a href="/Login">Login</a>
         </p>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
 

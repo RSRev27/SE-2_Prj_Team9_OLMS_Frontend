@@ -24,6 +24,7 @@ body {
   
   .main-content {
     display: flex;
+    flex-direction: column;
     flex: 1;
     padding: 20px;
   }
@@ -54,6 +55,11 @@ body {
   .course-card img {
     width: 100%;
     border-radius: 8px;
+  }
+
+  .course-form{
+    display: flex;
+    flex-direction: column;
   }
   
   .todo-list {
